@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-family:
+    Helvetica Neue,
+    Helvetica,
+    Arial;
+}
+:root {
+  background-color: rgba(128, 128, 128, 0.192);
+}
