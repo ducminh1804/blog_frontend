@@ -37,7 +37,7 @@ export default function Vote({ voteVal }: Props) {
   return (
     <div>
       <div
-        className={classNames('flex items-center bg-slate-400 rounded-md ', {
+        className={classNames('flex items-center rounded-md ', {
           'bg-orange': vote,
           'bg-blue-700': downVote
         })}

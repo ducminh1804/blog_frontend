@@ -28,8 +28,9 @@ export default function CreatePostLayout() {
         >
           Text
         </NavLink>
+
         <NavLink
-          to={'/create-post/image'}
+          to={'/create-post/media'}
           className={({ isActive }) =>
             classNames('pb-2 text-gray-700 text-xl', {
               'text-black font-bold border-b-4 border-blue-600': isActive,
@@ -37,18 +38,7 @@ export default function CreatePostLayout() {
             })
           }
         >
-          Image
-        </NavLink>
-        <NavLink
-          to={'/create-post/video'}
-          className={({ isActive }) =>
-            classNames('pb-2 text-gray-700 text-xl', {
-              'text-black font-bold border-b-4 border-blue-600': isActive,
-              '': !isActive
-            })
-          }
-        >
-          Video
+          Image & Video
         </NavLink>
       </div>
 

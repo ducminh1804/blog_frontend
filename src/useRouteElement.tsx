@@ -8,9 +8,8 @@ import { useAppSelector } from './redux/hooks'
 import NewFeedLayout from './layouts/NewFeedLayout'
 import CreatePost from './layouts/CreatePostLayout'
 import CreatePostText from './components/CreatePost/CreatePostText'
-import CreatePostImage from './components/CreatePost/CreatePostImage'
-import CreatePostVideo from './components/CreatePost/CreatePostVideo'
 import CreatePostLayout from './layouts/CreatePostLayout'
+import CreatePostMedia from './components/CreatePost/CreatePostMedia'
 
 export default function useRouterElement() {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuth)
@@ -75,12 +74,8 @@ export default function useRouterElement() {
                   element: <CreatePostText />
                 },
                 {
-                  path: '/create-post/image',
-                  element: <CreatePostImage />
-                },
-                {
-                  path: '/create-post/video',
-                  element: <CreatePostVideo />
+                  path: '/create-post/media',
+                  element: <CreatePostMedia />
                 }
               ]
             }

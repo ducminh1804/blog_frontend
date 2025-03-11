@@ -1,6 +1,6 @@
 import React from 'react'
 import PostList from '../../components/PostList'
-import HistoryList from '../../HistoryList/HistoryList'
+import HistoryList from '../../components/HistoryList'
 
 export default function NewFeedLayout() {
   return (

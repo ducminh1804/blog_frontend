@@ -2,10 +2,11 @@ import React from 'react'
 import { CirclePlus, Globe, BookOpen, Search, Bot, Laugh } from 'lucide-react'
 import NavItem from '../NavItem'
 import { useAppSelector } from '../../redux/hooks'
+import { useNavigate } from 'react-router-dom'
 
 export default function Header() {
   const isAuth = useAppSelector((state) => state.auth.isAuth)
-
+  const navigate = useNavigate()
   return (
     <div className='sticky top-0 z-50'>
       <nav className='flex items-center justify-between px-28 py-5 bg-white shadow-md'>
@@ -23,11 +24,13 @@ export default function Header() {
           {/* Navigation */}
           <div className='flex items-center gap-3'>
             <NavItem icon={<Bot size={20} className='text-blue-600' />} text='Chat' color='bg-blue-100' />
-            <NavItem
-              icon={<CirclePlus size={20} className='text-green-600' />}
-              text='Create Post'
-              color='bg-green-100'
-            />
+            <div onClick={() => navigate('/create-post/text')}>
+              <NavItem
+                icon={<CirclePlus size={20} className='text-green-600' />}
+                text='Create Post'
+                color='bg-green-100'
+              />
+            </div>
           </div>
         </div>
         <input placeholder='Search' className=' mx-2 flex-1 border rounded-3xl border-black p-2 rounded-md' />
@@ -41,8 +44,8 @@ export default function Header() {
             </button>
           </div>
         ) : (
-            <div>
-              <NavItem color='bg-red-100' icon={<Laugh size={20} className='text-red-600'/>} text=''/>
+          <div>
+            <NavItem color='bg-red-100' icon={<Laugh size={20} className='text-red-600' />} text='' />
           </div>
         )}
       </nav>
