@@ -5,6 +5,9 @@ import { loginAccount, type Auth } from '../../api/auth.api'
 import { parse } from 'path'
 import { parseErrorAxios } from '../../types/error'
 import { toast } from 'react-toastify'
+import { useAppDispatch } from '../../redux/hooks'
+import { login } from '../../redux/slices/authentication.slice'
+import { useNavigate } from 'react-router-dom'
 
 type FormValues = {
   username: string
@@ -12,6 +15,7 @@ type FormValues = {
 }
 
 export default function Login() {
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -24,8 +28,9 @@ export default function Login() {
     }
   })
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    loginMutation.mutate(data)
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    await loginMutation.mutateAsync(data)
+    dispatch(login())
   }
 
   const loginMutation = useMutation({
@@ -36,8 +41,11 @@ export default function Login() {
     },
     onSuccess: () => {
       toast.success('Login successfully')
+      navigate('/')
     }
   })
+
+  const dispatch = useAppDispatch()
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
