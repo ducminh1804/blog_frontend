@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import NavItem from '../NavItem'
 import { CircleArrowDown, CircleArrowUp } from 'lucide-react'
 import VoteButton from './VoteButton'
 import classNames from 'classnames'

@@ -1,0 +1,9 @@
+.hide-scrollbar {
+  overflow-y: auto; /* vẫn cho phép cuộn */
+  -ms-overflow-style: none; /* IE và Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

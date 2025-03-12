@@ -10,6 +10,10 @@ import CreatePost from './layouts/CreatePostLayout'
 import CreatePostText from './components/CreatePost/CreatePostText'
 import CreatePostLayout from './layouts/CreatePostLayout'
 import CreatePostMedia from './components/CreatePost/CreatePostMedia'
+import PostDetail from './components/PostDetail'
+import PostList from './components/PostList'
+import HistoryList from './components/HistoryList'
+import InfoGroup from './components/InfoGroup'
 
 export default function useRouterElement() {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuth)
@@ -32,7 +36,11 @@ export default function useRouterElement() {
       children: [
         {
           path: '/',
-          element: <NewFeedLayout />
+          element: <NewFeedLayout leftChild={<PostList />} rightChild={<HistoryList />} />
+        },
+        {
+          path: '/:postId',
+          element: <NewFeedLayout leftChild={<PostDetail />} rightChild={<InfoGroup />} />
         }
       ]
     },
@@ -57,14 +65,6 @@ export default function useRouterElement() {
         {
           element: <MainLayout />,
           children: [
-            {
-              path: '/protect',
-              element: <Protect />
-            },
-            {
-              path: '/create-post',
-              element: <CreatePost />
-            },
             {
               path: '',
               element: <CreatePostLayout />,

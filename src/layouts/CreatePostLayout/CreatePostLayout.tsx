@@ -41,7 +41,6 @@ export default function CreatePostLayout() {
           Image & Video
         </NavLink>
       </div>
-
       <Outlet />
     </div>
   )

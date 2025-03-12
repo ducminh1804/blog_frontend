@@ -1,3 +1,3 @@
-import CreatePostLayout from './CreatePost'
+import CreatePostLayout from './CreatePostLayout'
 
 export default CreatePostLayout

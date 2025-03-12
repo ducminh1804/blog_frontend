@@ -26,7 +26,7 @@ export const authSlice = createSlice({
   }
 })
 
-export const { login, logout } = authSlice.actions
+export const { login, logout, } = authSlice.actions
 export default authSlice.reducer
 // interface 👉 Dùng cho object structure, kế thừa tốt hơn.
 //   type 👉 Dùng cho union, intersection, function type, tuple.

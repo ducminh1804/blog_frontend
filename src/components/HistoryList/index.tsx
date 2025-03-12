@@ -1,2 +1,2 @@
-import HistoryList from './History'
+import HistoryList from './HistoryList'
 export default HistoryList

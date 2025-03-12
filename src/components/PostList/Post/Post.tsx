@@ -2,11 +2,15 @@ import Credit from '../../Credit'
 import Vote from '../../Vote'
 import NavItem from '../../NavItem'
 import { BookMarked, MessageCircle } from 'lucide-react'
+import type { ReactNode } from 'react'
 
-export default function Post() {
+interface Props {
+  icon: ReactNode
+}
+export default function Post({ icon }: Props) {
   return (
     <div className='mt-2 mb-4 border-b-2 pb-5'>
-      <Credit />
+      <Credit icon={icon} />
       <div className='py-3'>content</div>
       <div className='py-3'>
         <img
@@ -16,7 +20,7 @@ export default function Post() {
         />
       </div>
       <div className='flex gap-2 '>
-        <Vote voteVal={10} />
+        <Vote voteVal={12} />
         <NavItem icon={<MessageCircle />} color='bg-slate-400' text='93' />
         <NavItem icon={<BookMarked />} color='bg-slate-400' />
       </div>
