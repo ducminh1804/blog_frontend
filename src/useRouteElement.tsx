@@ -3,10 +3,9 @@ import Login from './pages/Login'
 import Profile from './pages/Profile'
 import Protect from './pages/Protect'
 import Register from './pages/Register'
-import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet, useRoutes } from 'react-router-dom'
 import { useAppSelector } from './redux/hooks'
 import NewFeedLayout from './layouts/NewFeedLayout'
-import CreatePost from './layouts/CreatePostLayout'
 import CreatePostText from './components/CreatePost/CreatePostText'
 import CreatePostLayout from './layouts/CreatePostLayout'
 import CreatePostMedia from './components/CreatePost/CreatePostMedia'
@@ -39,7 +38,7 @@ export default function useRouterElement() {
           element: <NewFeedLayout leftChild={<PostList />} rightChild={<HistoryList />} />
         },
         {
-          path: '/:postId',
+          path: '/post/:postId',
           element: <NewFeedLayout leftChild={<PostDetail />} rightChild={<InfoGroup />} />
         }
       ]

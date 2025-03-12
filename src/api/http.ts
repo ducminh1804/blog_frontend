@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { clearLS, setTokenToLS, type KeyToken } from '../utils/localstore.service'
-import type { ApiResponse, TokenResponse } from '../types/response'
+import type { ApiResponse, TokenResponse } from '../types/response.type'
 export const http = axios.create({
   baseURL: "http://localhost:8080/",
   timeout: 10000,
