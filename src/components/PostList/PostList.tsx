@@ -2,16 +2,25 @@ import React, { useEffect, useRef, useState } from 'react'
 import Post from './Post/Post'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { PostAPI } from '../../api/post.api'
-import { ScrollRestoration } from 'react-router-dom'
 
-export default function PostList() {
+interface Props {
+  postRef?: React.RefObject<HTMLDivElement>
+}
+
+export default function PostList({ postRef }: Props) {
+  // console.log("kiem tra co bi re render khi newFeed no render k?")
+
   const getPosts = PostAPI.getPosts
   const { data, isFetching, error, fetchNextPage } = useInfiniteQuery({
     queryKey: ['posts'],
+    // truyen cai dieu kien vao,//pageParam mac dinh ban dau initialPagaParam
     queryFn: ({ pageParam }) => getPosts(pageParam),
     initialPageParam: new Date().toISOString(),
+    //lay ra dieu kien cua page before de fetch tiep tuc
     getNextPageParam: (lastPage, pages) => lastPage.data.data.at(-1)?.createdAt
   })
+  //xu li props ref tu newfeed
+  //
 
   //lam phang page tra ve,de lay ra data that su tu apiresponse
   const posts = data?.pages.flatMap((page) => page.data.data) || []
@@ -24,7 +33,6 @@ export default function PostList() {
   // 👉 useEffect không cần chạy lại sau mỗi lần fetch, vì Observer đã hoạt động độc lập.
   useEffect(() => {
     if (!lastPostRef.current) return
-    console.log('current', lastPostRef.current)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -33,14 +41,13 @@ export default function PostList() {
           }
         })
       },
-      { threshold: 0.5 }
+      { threshold: 0.2 }
     )
     observer.observe(lastPostRef.current)
     //xu li khi component unmount
     return () => observer.disconnect()
   }, [isFetching])
 
-  console.log(posts)
   return (
     <div className='p-2'>
       {posts.map((post, index) => {
@@ -48,6 +55,7 @@ export default function PostList() {
         return (
           <div key={post.id} ref={isLastPost ? lastPostRef : null}>
             <Post
+              postRef={postRef}
               id={post.id}
               username={post.username}
               crtAt={post.createdAt}

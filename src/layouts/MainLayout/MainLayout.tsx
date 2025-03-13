@@ -6,7 +6,6 @@ import { Outlet, ScrollRestoration } from 'react-router-dom'
 import ChatLayout from '../ChatLayout'
 
 export default function MainLayout() {
-
   return (
     <div>
       <Header />

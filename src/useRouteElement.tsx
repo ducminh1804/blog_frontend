@@ -16,7 +16,7 @@ import InfoGroup from './components/InfoGroup'
 
 export default function useRouterElement() {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuth)
-  console.log(isAuthenticated)
+  // console.log(isAuthenticated)
 
   //login roi=> cho vao trang profile, chua login=> cho ve trang login
   function ProtectedRoute() {

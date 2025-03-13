@@ -1,9 +1,65 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Vote from '../../Vote'
 import NavItem from '../../NavItem'
 import { MessageSquareQuote } from 'lucide-react'
+import type { CommentContent } from '../../../types/comment.type'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { CommentAPI } from '../../../api/comment.api'
+import CommentList from '../CommentList'
+import classNames from 'classnames'
 
-export default function Comment() {
+interface Props {
+  comment: CommentContent
+  postId: string
+}
+export default function Comment({ comment, postId }: Props) {
+  const { content, createdAt, id, userId, voteDown, voteUp, username, parentId } = comment
+  const [expand, setExpand] = useState<{ ex: boolean; msg: string }>({ ex: false, msg: 'More replies' })
+  console.log(id)
+  const checkQuery = useQuery({
+    queryKey: ['flag', id],
+    queryFn: () => CommentAPI.checkReplys(id)
+  })
+
+  const commentsQuery = useInfiniteQuery({
+    queryKey: ['comments', postId, id],
+    //pageParam mac dinh ban dau initialPagaParam
+    queryFn: ({ pageParam }) => CommentAPI.getComments(postId as string, id, pageParam, 2),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      // if (lastPage?.data?.data?.last) return undefined
+      return lastPage.data.data.pageable.pageNumber + 1
+    },
+    
+    enabled: expand.ex
+  })
+
+  // lay data
+  const flag = checkQuery.data?.data.data
+
+  const subComments =
+    commentsQuery.data?.pages.flatMap((item) => {
+      return item.data.data.content
+    }) || []
+
+  const last = commentsQuery.data?.pages.at(-1)?.data.data.last
+
+  const handleLoadChild = () => {
+    setExpand((prev) => ({
+      ex: !prev.ex,
+      msg: prev.ex ? 'More reply' : 'Hide replies'
+    }))
+  }
+
+  console.log('Component re-rendered, expand:', expand.ex)
+
+  const handleLoadParent = () => {
+    console.log(id)
+    commentsQuery.fetchNextPage()
+  }
+
+  console.log('All pages:', commentsQuery.data?.pages)
+
   return (
     <div>
       <div className='flex gap-2 items-start my-3'>
@@ -16,20 +72,50 @@ export default function Comment() {
         </div>
         <div className='flex-1 min-w-0'>
           <div>
-            <span className='font-bold text-[13px] font-sans'>brian</span>
+            <span className='font-bold text-[13px] font-sans'>{username}</span>
+            <span>userId: {userId}</span>
           </div>
           <div>
-            <p className='break-words font-thin text-[13px] pr-5'>alofsdaf sadffffff asssssssssssssssssssssssfffffff</p>
+            <p className='break-words font-thin text-[13px] pr-5'>{content}</p>
+            <span>commentId: {id}</span>
+            <span>parentId: {parentId}</span>
           </div>
         </div>
       </div>
       <div>
         <div className='flex flex-col gap-1'>
           <div className='flex gap-10 items-center pl-8'>
-            <Vote voteVal={2} />
+            <Vote voteVal={voteUp - voteDown} />
             <NavItem icon={<MessageSquareQuote />} text='Reply' />
           </div>
-          <span className='pl-10 opacity-80 text-xs cursor-pointer '>More reply</span>
+          <div
+            className={classNames('', {
+              block: flag === 1,
+              hidden: flag === 0
+            })}
+          >
+            <button onClick={handleLoadChild} className='btn text-xs pl-10 font-bold active:scale-95 transition-all'>
+              {expand.msg}
+            </button>
+          </div>
+
+          <div
+            className={classNames('ml-3 pl-3 border-l', {
+              none: expand.ex,
+              hidden: !expand.ex
+            })}
+          >
+            <CommentList comments={subComments} postId={postId} />
+            <button
+              onClick={handleLoadParent}
+              className={classNames('btn text-xs pl-5 text-orange font-bold active:scale-95 transition-all', {
+                block: !last,
+                hidden: last
+              })}
+            >
+              More replies
+            </button>
+          </div>
         </div>
       </div>
     </div>
