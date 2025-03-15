@@ -17,11 +17,8 @@ export default function NewFeedLayout({ leftChild, rightChild }: Props) {
     const leftColumn = leftColumnRef.current
     if (!leftColumn) return
     leftColumn.scrollTop = position
-    // console.log('position', position)
-    // console.log('leftColumnRef', leftColumnRef)
   })
 
-  // console.log('quay lai nf')
 
   return (
     <div className='flex px-8 gap-10 my-4 h-screen'>

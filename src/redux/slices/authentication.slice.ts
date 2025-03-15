@@ -3,21 +3,24 @@ import { getTokenFromLS } from '../../utils/localstore.service'
 
 export interface AuthProps {
   isAuth: boolean,
-  username: string
+  username: string,
+  id: string
 }
 
 const defaultAuth: AuthProps = {
   isAuth: Boolean(getTokenFromLS('token')),
-  username: ''
+  id: getTokenFromLS('id') || '',
+  username: getTokenFromLS('username') || ''
 }
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState: defaultAuth,
   reducers: {
-    login: state => {
+    login: (state, actions) => {
       state.isAuth = true
-      state.username = 'admin'
+      state.username = actions.payload.username
+      state.id = actions.payload.id
     },
     logout: state => {
       state.isAuth = false

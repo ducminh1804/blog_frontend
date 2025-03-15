@@ -1,7 +1,15 @@
 import { BotMessageSquare } from 'lucide-react'
 import Chanel from './Chanel/Chanel'
 import '../../../layouts/ChatLayout/style.css'
-export default function ChanelList() {
+import type { Follow } from '../../../types/follow.type'
+import { memo } from 'react'
+
+interface Props {
+  follows: Follow[]
+  onSetChanel: React.Dispatch<React.SetStateAction<string>>
+}
+
+const ChanelList = memo(({ follows, onSetChanel }: Props) => {
   return (
     <div className='hide-scrollbar overflow-y-auto h-full'>
       <div className='rounded-tl-lg bg-white sticky top-0 z-10 flex gap-2 items-center border-b p-1 border-gray-400'>
@@ -9,12 +17,14 @@ export default function ChanelList() {
         <span className='font-bold text-2xl'>Chats</span>
       </div>
       <div>
-        {Array.from({ length: 30 }, (_, index) => (
-          <div key={index} className='p-2 border-b border-gray-300 cursor-pointer'>
-            <Chanel />
+        {follows.map((item, _) => (
+          <div key={item.followingId} onClick={() => onSetChanel(item.followingId)} className='px-2 cursor-pointer'>
+            <Chanel item={item} />
           </div>
         ))}
       </div>
     </div>
   )
-}
+})
+
+export default ChanelList

@@ -1,13 +1,15 @@
-import { useMutation } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { loginAccount, type Auth } from '../../api/auth.api'
 import { parse } from 'path'
 import { parseErrorAxios } from '../../types/error.type'
 import { toast } from 'react-toastify'
-import { useAppDispatch } from '../../redux/hooks'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { login } from '../../redux/slices/authentication.slice'
 import { useNavigate } from 'react-router-dom'
+import type { Auth, UserInfo } from '../../types/auth.type'
+import { AuthAPI } from '../../api/auth.api'
+import { setTokenToLS } from '../../utils/localstore.service'
 
 type FormValues = {
   username: string
@@ -28,13 +30,15 @@ export default function Login() {
     }
   })
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    await loginMutation.mutateAsync(data)
-    dispatch(login())
-  }
+  //luon chay khi vao trang login, du co dang nhap hay k
+  const userInfoQuery = useQuery({
+    queryKey: ['user'],
+    queryFn: () => AuthAPI.getInfo(),
+    enabled: false // ngan no tu dong chay khi mount
+  })
 
   const loginMutation = useMutation({
-    mutationFn: (data: Auth) => loginAccount(data),
+    mutationFn: (data: Auth) => AuthAPI.loginAccount(data),
     onError: (error) => {
       const errorResponse = parseErrorAxios(error)
       toast.error(errorResponse?.message)
@@ -44,6 +48,21 @@ export default function Login() {
       navigate('/')
     }
   })
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    //muon xu li error thi phai dung mutateasync, no se throw ra exception neu co loi, con mutation chi bao loi thoi , nhung van thuc thi code tiep tuc
+    await loginMutation.mutateAsync(data)
+    //usequery k doi load xong moi dispatch
+    const user = await userInfoQuery.refetch()
+    const auth = user.data?.data.data as UserInfo
+    setTokenToLS('id', auth.id)
+    setTokenToLS('username', auth.username)
+    // const userInfo = userInfoQuery.data?.data.data as UserInfo
+    dispatch(login(auth))
+    console.log('login running')
+  }
+
+  const auth = useAppSelector((state) => state.auth)
 
   const dispatch = useAppDispatch()
 

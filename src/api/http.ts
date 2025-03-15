@@ -29,6 +29,8 @@ http.interceptors.response.use(
       const { token, refreshToken } = (response.data as ApiResponse<TokenResponse>).data;
       setTokenToLS('token', token)
       setTokenToLS('refreshToken', refreshToken)
+      // setTokenToLS('id')
+      console.log("interceptor run")
       console.log(token, refreshToken)
     } else if (url === '/logout') {
       clearLS();

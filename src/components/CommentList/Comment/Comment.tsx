@@ -15,7 +15,6 @@ interface Props {
 export default function Comment({ comment, postId }: Props) {
   const { content, createdAt, id, userId, voteDown, voteUp, username, parentId } = comment
   const [expand, setExpand] = useState<{ ex: boolean; msg: string }>({ ex: false, msg: 'More replies' })
-  console.log(id)
   const checkQuery = useQuery({
     queryKey: ['flag', id],
     queryFn: () => CommentAPI.checkReplys(id)
@@ -30,7 +29,6 @@ export default function Comment({ comment, postId }: Props) {
       // if (lastPage?.data?.data?.last) return undefined
       return lastPage.data.data.pageable.pageNumber + 1
     },
-    
     enabled: expand.ex
   })
 
@@ -51,14 +49,9 @@ export default function Comment({ comment, postId }: Props) {
     }))
   }
 
-  console.log('Component re-rendered, expand:', expand.ex)
-
   const handleLoadParent = () => {
-    console.log(id)
     commentsQuery.fetchNextPage()
   }
-
-  console.log('All pages:', commentsQuery.data?.pages)
 
   return (
     <div>

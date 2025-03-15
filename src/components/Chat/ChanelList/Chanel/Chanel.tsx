@@ -1,8 +1,11 @@
-import React from 'react'
+import type { Follow } from '../../../../types/follow.type'
 
-export default function Chanel() {
+interface Props {
+  item: Follow
+}
+export default function Chanel({ item }: Props) {
   return (
-    <div>
+    <div className='bg-blue-950 p-2 rounded-lg mt-1'>
       <div className='flex gap-2 cursor-pointer'>
         <div>
           <img
@@ -11,9 +14,9 @@ export default function Chanel() {
             alt=''
           />
         </div>
-        <div className='flex flex-col'>
-          <span className='font-sans  opacity-80 text-[12px]'>r/VietNamNation</span>
-          <span className='text-[11px]'>tin nhan tam thoi</span>
+        <div className='flex flex-col text-white'>
+          <span className='font-sans  opacity-80 text-[12px] font-bold'>{item.username}</span>
+          <span className='text-[11px]'>Tin nhan tam thoi...</span>
         </div>
       </div>
     </div>

@@ -22,6 +22,7 @@ interface Props {
   downVoted: number
   postRef?: React.RefObject<HTMLDivElement>
 }
+
 export default function Post(props: Props) {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -34,7 +35,7 @@ export default function Post(props: Props) {
     dispatch(scrolling(position))
   }
 
-  useEffect(() => {
+  useEffect(() => { 
     window.scrollTo(0, 0)
   }, [])
 

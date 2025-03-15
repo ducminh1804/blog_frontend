@@ -1,6 +1,11 @@
 import React from 'react'
+import type { MessageType } from '../../../../types/message.type'
 
-export default function Message() {
+interface Props {
+  message: MessageType
+}
+export default function Message({ message }: Props) {
+  const { content, createAt, id, recipentId, senderId } = message
   return (
     <div className='flex gap-2 items-start my-3'>
       <div>
@@ -12,12 +17,13 @@ export default function Message() {
       </div>
       <div className='flex-1 min-w-0'>
         <div>
-          <span className='font-bold text-[13px] font-sans'>brian</span>
+          <span className='font-bold text-[13px] font-sans'>{senderId}</span>
         </div>
-        <div>
-          <p className='break-words font-thin text-[13px] pr-5'>
-           alofsdaf sadffffff  asssssssssssssssssssssssfffffff
+        <div className='w-fit'>
+          <p className='bg-blue-300 break-words font-thin text-[13px] p-2 rounded-lg pr-5'>
+            {content}
           </p>
+          <span>{createAt}</span>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-export type KeyToken = 'token' | 'refreshToken'
+export type KeyToken = 'token' | 'refreshToken' | 'id' | 'username'
 
 export const setTokenToLS = (key: KeyToken, data: string) => {
   const item = typeof data !== 'string' ? JSON.stringify(data) : data;
@@ -8,6 +8,9 @@ export const setTokenToLS = (key: KeyToken, data: string) => {
 export const getTokenFromLS = (key: KeyToken) => {
   return localStorage.getItem(key)
 }
+
+
+
 
 export const LocalStorageEventTarget = new EventTarget();
 

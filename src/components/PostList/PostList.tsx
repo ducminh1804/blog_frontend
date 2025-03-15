@@ -26,7 +26,7 @@ export default function PostList({ postRef }: Props) {
   const posts = data?.pages.flatMap((page) => page.data.data) || []
   const lastPostRef = useRef<any>(null)
 
-  //   👉 Lần đầu tiên useEffect chạy, nó chỉ khởi tạo IntersectionObserver để theo dõi lastPostRef.
+  // 👉 Lần đầu tiên useEffect chạy, nó chỉ khởi tạo IntersectionObserver để theo dõi lastPostRef.
 
   // 👉 Sau đó, mỗi khi lastPostRef xuất hiện trong viewport, Observer sẽ tự động gọi fetchNextPage().
 
