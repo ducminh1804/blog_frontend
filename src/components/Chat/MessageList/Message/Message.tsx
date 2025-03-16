@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { memo } from 'react'
 import type { MessageType } from '../../../../types/message.type'
 
 interface Props {
   message: MessageType
 }
-export default function Message({ message }: Props) {
+const Message = memo(({ message }: Props) => {
   const { content, createAt, id, recipentId, senderId } = message
   return (
     <div className='flex gap-2 items-start my-3'>
@@ -20,12 +20,11 @@ export default function Message({ message }: Props) {
           <span className='font-bold text-[13px] font-sans'>{senderId}</span>
         </div>
         <div className='w-fit'>
-          <p className='bg-blue-300 break-words font-thin text-[13px] p-2 rounded-lg pr-5'>
-            {content}
-          </p>
+          <p className='bg-blue-300 break-words font-thin text-[13px] p-2 rounded-lg pr-5'>{content}</p>
           <span>{createAt}</span>
         </div>
       </div>
     </div>
   )
-}
+})
+export default Message

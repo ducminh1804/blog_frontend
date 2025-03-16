@@ -1,7 +1,7 @@
 import { SendHorizontal } from 'lucide-react'
-import React from 'react'
+import React, { memo } from 'react'
 
-export default function InputMessage() {
+const InputMessage = memo(() => {
   return (
     <div>
       <div className='flex items-center gap-2 px-4 '>
@@ -14,4 +14,6 @@ export default function InputMessage() {
       </div>
     </div>
   )
-}
+})
+
+export default InputMessage

@@ -7,7 +7,7 @@ import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { MessageAPI } from '../../api/message.api'
 import { useAppSelector } from '../../redux/hooks'
 
-const ChatLayout = () => {
+const ChatLayout = memo(() => {
   const userId = useAppSelector((state) => state.auth.id)
   const [chanel, setChanel] = useState('')
   const followQuery = useQuery({
@@ -39,7 +39,6 @@ const ChatLayout = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          console.log('🔍 Intersection Observer:', entry.isIntersecting)
 
           if (entry.isIntersecting) {
             messagesQuery.fetchNextPage()
@@ -53,12 +52,9 @@ const ChatLayout = () => {
     )
     //dang ki observer
     observer.observe(msgRef.current)
+
     return () => observer.disconnect()
   }, [messagesQuery.isFetching])
-
-  useEffect(() => {
-    console.log('🆔 Query Key:', ['message', userId, chanel])
-  }, [userId, chanel])
 
   return (
     <div className='fixed bottom-0 right-0 z-50'>
@@ -72,7 +68,7 @@ const ChatLayout = () => {
       </div>
     </div>
   )
-}
+})
 export default ChatLayout
 /*
 li do check null o dong 38, lan sau component mount len, chi la cay dom rong,k co du lieu,

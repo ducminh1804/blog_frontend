@@ -10,8 +10,8 @@ export default function ChatController() {
     <div>
       <div
         className={classNames({
-          block: activeChat,
-          hidden: !activeChat
+          'visible opacity-100  transition-all': activeChat,
+          'invisible opacity-0 transition-all': !activeChat
         })}
       >
         <ChatLayout />

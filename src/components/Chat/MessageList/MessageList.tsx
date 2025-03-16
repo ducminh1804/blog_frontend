@@ -5,13 +5,18 @@ import Message from './Message/Message'
 
 interface Props {
   messages: MessageType[]
-  curRef: React.MutableRefObject<null>
+  curRef: React.MutableRefObject<HTMLDivElement | null>
 }
 
-export default function MessageList({ messages, curRef }: Props) {
-  console.log(curRef)
+const MessageList = memo(({ messages, curRef }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const prevScrollHeightRef = useRef(0)
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight
+    }
+  })
 
   useEffect(() => {
     if (containerRef.current) {
@@ -28,7 +33,6 @@ export default function MessageList({ messages, curRef }: Props) {
       <div ref={containerRef} className='flex-1 overflow-y-auto p-2'>
         {messages.map((item, index) => {
           const isFirstMsg = index === 0
-          // const isFirstMsg = index === messages.length - 1
           return (
             <div key={item.id} ref={isFirstMsg ? curRef : null}>
               <span>{item.id}</span>
@@ -42,6 +46,6 @@ export default function MessageList({ messages, curRef }: Props) {
       </div>
     </div>
   )
-}
+})
 
-// export default MessageList
+export default MessageList
