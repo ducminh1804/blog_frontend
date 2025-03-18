@@ -9,8 +9,6 @@ export const sendMessage = (
       destination: '/app/chat/private/' + recipient,
       body: JSON.stringify(message)
     })
-    console.log(recipient)
-    console.log(message)
   }
 }
 

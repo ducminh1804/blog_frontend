@@ -15,7 +15,7 @@ const MessageList = memo(({ messages, curRef, chanel, isLoading }: Props) => {
   const prevScrollHeightRef = useRef(0)
   const prevChanelRef = useRef('')
   const initialScrollDoneRef = useRef(false)
-
+  const lastMessageIdRef = useRef('')
   // Cuộn xuống dưới cùng khi component mount lần đầu
   useEffect(() => {
     if (containerRef.current && !initialScrollDoneRef.current) {
@@ -27,11 +27,14 @@ const MessageList = memo(({ messages, curRef, chanel, isLoading }: Props) => {
   // Xử lý scroll khi messages thay đổi
   useEffect(() => {
     if (!containerRef.current || messages.length === 0) return
-
     const container = containerRef.current
 
     // Kiểm tra xem người dùng đang ở gần cuối hay không
-    const isNearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 100
+    const isNearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 80
+
+    const lastMessage = messages.at(-1) as MessageType
+    const newLastMessageId = lastMessage.id
+    const oldLastMessageId = lastMessageIdRef.current
 
     // Nếu chuyển kênh hoặc người dùng ở gần cuối, scroll xuống dưới cùng
     if (prevChanelRef.current !== chanel) {
@@ -40,14 +43,14 @@ const MessageList = memo(({ messages, curRef, chanel, isLoading }: Props) => {
           containerRef.current.scrollTop = containerRef.current.scrollHeight
         }
       })
-    } else if (isNearBottom) {
+    } else if (isNearBottom || newLastMessageId !== oldLastMessageId) {
       // Nếu người dùng đang ở gần cuối, scroll xuống dưới cùng
       requestAnimationFrame(() => {
         if (containerRef.current) {
           containerRef.current.scrollTop = containerRef.current.scrollHeight
         }
       })
-    } else {
+    } else if (newLastMessageId == oldLastMessageId) {
       // Giữ nguyên vị trí scroll tương đối
       const newScrollTop = containerRef.current.scrollHeight - prevScrollHeightRef.current
       if (newScrollTop > 0) {
@@ -56,6 +59,8 @@ const MessageList = memo(({ messages, curRef, chanel, isLoading }: Props) => {
     }
 
     // Cập nhật chiều cao trước đó
+    lastMessageIdRef.current = newLastMessageId
+    prevScrollHeightRef.current = container.scrollHeight
     prevScrollHeightRef.current = containerRef.current.scrollHeight
   }, [messages, chanel])
 

@@ -73,11 +73,11 @@ const ChatLayout = memo(() => {
     if (!msg) return
 
     const newMsg = toMessageType(msg as msgType, chanel)
-    console.log('Tin nhắn mới nhận được:', newMsg)
+    // console.log('Tin nhắn mới nhận được:', newMsg)
 
     // Kiểm tra xem tin nhắn mới có thuộc về kênh hiện tại không
     if (newMsg.senderId === chanel) {
-      console.log('â')
+      // console.log('â')
       // Thêm tin nhắn mới vào cache của React Query,
       // đảm bảo tạo bản sao mới (không mutate đối tượng cũ)
       queryClient.setQueryData(['message', userId, chanel], (oldData: any) => {
