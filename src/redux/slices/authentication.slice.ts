@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getTokenFromLS } from '../../utils/localstore.service'
+import { getTokenFromLS } from '../../services/localstore.service'
 
 export interface AuthProps {
   isAuth: boolean,

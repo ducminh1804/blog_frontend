@@ -6,7 +6,7 @@ import { memo } from 'react'
 
 interface Props {
   follows: Follow[]
-  onSetChanel: React.Dispatch<React.SetStateAction<string>>
+  onSetChanel: (newChanel: string) => void
 }
 
 const ChanelList = memo(({ follows, onSetChanel }: Props) => {

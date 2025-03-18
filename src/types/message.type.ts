@@ -3,5 +3,12 @@ export type MessageType = {
   senderId: string,
   recipentId: string,
   content: string
-  createAt:string
+  createAt: string
+}
+
+
+export type msgType = {
+  type: string
+  senderId: string
+  content: string
 }

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { clearLS, setTokenToLS, type KeyToken } from '../utils/localstore.service'
+import { clearLS, setTokenToLS, type KeyToken } from '../services/localstore.service'
 import type { ApiResponse, TokenResponse } from '../types/response.type'
 export const http = axios.create({
   baseURL: "http://localhost:8080/",
@@ -32,6 +32,9 @@ http.interceptors.response.use(
       // setTokenToLS('id')
       console.log("interceptor run")
       console.log(token, refreshToken)
+
+
+
     } else if (url === '/logout') {
       clearLS();
     }

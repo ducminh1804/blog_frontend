@@ -9,7 +9,8 @@ import { login } from '../../redux/slices/authentication.slice'
 import { useNavigate } from 'react-router-dom'
 import type { Auth, UserInfo } from '../../types/auth.type'
 import { AuthAPI } from '../../api/auth.api'
-import { setTokenToLS } from '../../utils/localstore.service'
+import { getTokenFromLS, setTokenToLS } from '../../services/localstore.service'
+import { connectStomp } from '../../services/stompClient'
 
 type FormValues = {
   username: string
@@ -46,6 +47,7 @@ export default function Login() {
     onSuccess: () => {
       toast.success('Login successfully')
       navigate('/')
+      console.log('connect to socket')
     }
   })
 
@@ -59,7 +61,7 @@ export default function Login() {
     setTokenToLS('username', auth.username)
     // const userInfo = userInfoQuery.data?.data.data as UserInfo
     dispatch(login(auth))
-    console.log('login running')
+    //connect stomp
   }
 
   const auth = useAppSelector((state) => state.auth)
