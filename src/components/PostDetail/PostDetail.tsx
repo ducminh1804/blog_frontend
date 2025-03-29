@@ -1,23 +1,27 @@
 import InputComment from '../InputComment'
 import CommentList from '../CommentList'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { PostAPI } from '../../api/post.api'
 import Post from '../PostList/Post'
 import { ArrowBigLeft } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { CommentAPI } from '../../api/comment.api'
 import classNames from 'classnames'
-
+import { useAppSelector } from '../../redux/hooks'
+import _ from 'lodash'
 export default function PostDetail() {
+  const queryClient = useQueryClient()
   const { postId } = useParams()
   const { data, isFetching } = useQuery({
     queryKey: ['post', postId],
     queryFn: () => PostAPI.getPostById(postId as string)
   })
+  const userId = useAppSelector((state) => state.auth.id)
   const post = data?.data.data
 
-  
+  const [content, setContent] = useState<string>()
+
   const commentsQuery = useInfiniteQuery({
     queryKey: ['comments', postId],
     //pageParam mac dinh ban dau initialPagaParam
@@ -43,6 +47,45 @@ export default function PostDetail() {
     }
   }
 
+  const handleContent = (value: string) => {
+    setContent(value)
+  }
+
+  const commentMutation = useMutation({
+    mutationFn: (content: string) => CommentAPI.createComment(0, userId, postId as string, content)
+  })
+
+  useEffect(() => {
+    if (content) {
+      commentMutation.mutate(content as string)
+      console.log(commentsQuery.data)
+      const cmt = {
+        id: new Date().toISOString(),
+        parentId: 0,
+        userId,
+        content,
+        createdAt: new Date().toISOString(),
+        username: 'You'
+      }
+      //cache lai querydata
+      queryClient.setQueryData(['comments', postId], (oldData: any) => {
+        if (!oldData) return
+        /**
+         * update(obj:doi tuong can update,co the la obj nen dung {},
+         * Đây là oldData (dữ liệu hiện tại từ cache) đã được clone nhẹ bằng { ...oldData }
+         * để tạo một tham chiếu mới (tránh thay đổi trực tiếp oldData).
+         *
+         * path:duong dan den doi tuong do can update
+         *
+         * updaterFn: Hàm nhận giá trị cũ và trả về giá trị mới
+         */
+
+        return _.update({ ...oldData }, 'pages[0].data.data.content', (comments) => [cmt, ...comments])
+      })
+    }
+
+  }, [content])
+
   return (
     <div className='rounded p-3'>
       <div key={post?.id}>
@@ -64,7 +107,7 @@ export default function PostDetail() {
       </div>
       <div>
         <div>
-          <InputComment />
+          <InputComment handleContent={handleContent} />
         </div>
         <div>
           <CommentList comments={comments} postId={postId as string} />

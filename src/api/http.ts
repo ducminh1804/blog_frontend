@@ -32,9 +32,6 @@ http.interceptors.response.use(
       // setTokenToLS('id')
       console.log("interceptor run")
       console.log(token, refreshToken)
-
-
-
     } else if (url === '/logout') {
       clearLS();
     }

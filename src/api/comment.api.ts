@@ -7,5 +7,8 @@ export const CommentAPI = {
     http.get<ApiResponse<CommentResponse>>(`/comments/${postId}`, { params: { parentId, page, size } }),
 
   checkReplys: (parentId: number) =>
-    http.get<ApiResponse<number>>(`comments/flag/${parentId}`)
+    http.get<ApiResponse<number>>(`comments/flag/${parentId}`),
+
+  createComment: (parentId: number = 0, userId: string, postId: string, content: string) =>
+    http.post<ApiResponse<void>>("/comments", { parentId, userId, postId, content })
 }

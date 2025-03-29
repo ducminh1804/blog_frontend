@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Vote from '../../Vote'
 import NavItem from '../../NavItem'
 import { MessageSquareQuote } from 'lucide-react'
 import type { CommentContent } from '../../../types/comment.type'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CommentAPI } from '../../../api/comment.api'
 import CommentList from '../CommentList'
 import classNames from 'classnames'
-
+import InputComment from '../../InputComment'
+import _ from 'lodash'
+import { useAppSelector } from '../../../redux/hooks'
 interface Props {
   comment: CommentContent
   postId: string
@@ -15,6 +17,8 @@ interface Props {
 export default function Comment({ comment, postId }: Props) {
   const { content, createdAt, id, userId, voteDown, voteUp, username, parentId } = comment
   const [expand, setExpand] = useState<{ ex: boolean; msg: string }>({ ex: false, msg: 'More replies' })
+  const [reply, setReply] = useState(false)
+  const queryClient = useQueryClient()
   const checkQuery = useQuery({
     queryKey: ['flag', id],
     queryFn: () => CommentAPI.checkReplys(id)
@@ -53,6 +57,45 @@ export default function Comment({ comment, postId }: Props) {
     commentsQuery.fetchNextPage()
   }
 
+  const handleReply = () => {
+    setReply(!reply)
+  }
+
+  const [cmt, setCmt] = useState<string>()
+
+  const handleContent = (value: string) => {
+    setCmt(value)
+ 
+  }
+
+  const commentMutation = useMutation({
+    mutationFn: (cmt: string) => CommentAPI.createComment(id, userId, postId as string, cmt)
+  })
+
+  useEffect(() => {
+    if (cmt) {
+      console.log(cmt)
+      commentMutation.mutate(cmt as string)
+      const newCmt = {
+        id: new Date().toISOString(),
+        parentId: id,
+        userId,
+        cmt,
+        createdAt: new Date().toISOString(),
+        username: 'You'
+      }
+      queryClient.setQueryData(['comments', postId, id], (oldData: any) => {
+        if (!oldData) return
+        return _.update({ ...oldData }, 'pages[0].data.data.content', (comments) => [newCmt, ...comments])
+      })
+    }
+    setReply(false)
+       setExpand((prev) => ({
+         ex: !prev.ex,
+         msg: prev.ex ? 'More reply' : 'Hide replies'
+       }))
+  }, [cmt])
+
   return (
     <div>
       <div className='flex gap-2 items-start my-3'>
@@ -79,8 +122,12 @@ export default function Comment({ comment, postId }: Props) {
         <div className='flex flex-col gap-1'>
           <div className='flex gap-10 items-center pl-8'>
             <Vote voteVal={voteUp - voteDown} />
-            <NavItem icon={<MessageSquareQuote />} text='Reply' />
+            <div onClick={handleReply}>
+              <NavItem icon={<MessageSquareQuote />} text='Reply' />
+            </div>
           </div>
+
+          {reply && <InputComment handleContent={handleContent} />}
           <div
             className={classNames('', {
               block: flag === 1,
