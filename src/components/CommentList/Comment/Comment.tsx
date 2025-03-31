@@ -9,7 +9,7 @@ import CommentList from '../CommentList'
 import classNames from 'classnames'
 import InputComment from '../../InputComment'
 import _ from 'lodash'
-import { useAppSelector } from '../../../redux/hooks'
+
 interface Props {
   comment: CommentContent
   postId: string
@@ -19,6 +19,7 @@ export default function Comment({ comment, postId }: Props) {
   const [expand, setExpand] = useState<{ ex: boolean; msg: string }>({ ex: false, msg: 'More replies' })
   const [reply, setReply] = useState(false)
   const queryClient = useQueryClient()
+
   const checkQuery = useQuery({
     queryKey: ['flag', id],
     queryFn: () => CommentAPI.checkReplys(id)
@@ -65,7 +66,6 @@ export default function Comment({ comment, postId }: Props) {
 
   const handleContent = (value: string) => {
     setCmt(value)
- 
   }
 
   const commentMutation = useMutation({
@@ -74,26 +74,30 @@ export default function Comment({ comment, postId }: Props) {
 
   useEffect(() => {
     if (cmt) {
-      console.log(cmt)
+      setExpand((prev) => ({
+        ex: true,
+        msg: prev.msg
+      }))
+
       commentMutation.mutate(cmt as string)
-      const newCmt = {
-        id: new Date().toISOString(),
-        parentId: id,
+      const newCmt: CommentContent = {
+        id: Date.now(),
+        parentId: 0,
         userId,
-        cmt,
+        content: cmt,
         createdAt: new Date().toISOString(),
-        username: 'You'
+        username,
+        voteDown: 0,
+        voteUp: 0
       }
       queryClient.setQueryData(['comments', postId, id], (oldData: any) => {
-        if (!oldData) return
+        console.log(oldData)
+        if (!oldData) return _.update(oldData, 'pages[0].data.data.content', (comments) => [newCmt])
+
         return _.update({ ...oldData }, 'pages[0].data.data.content', (comments) => [newCmt, ...comments])
       })
     }
-    setReply(false)
-       setExpand((prev) => ({
-         ex: !prev.ex,
-         msg: prev.ex ? 'More reply' : 'Hide replies'
-       }))
+    console.log('end')
   }, [cmt])
 
   return (

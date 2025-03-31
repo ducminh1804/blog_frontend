@@ -10,6 +10,7 @@ import { CommentAPI } from '../../api/comment.api'
 import classNames from 'classnames'
 import { useAppSelector } from '../../redux/hooks'
 import _ from 'lodash'
+import type { CommentContent } from '../../types/comment.type'
 export default function PostDetail() {
   const queryClient = useQueryClient()
   const { postId } = useParams()
@@ -17,20 +18,17 @@ export default function PostDetail() {
     queryKey: ['post', postId],
     queryFn: () => PostAPI.getPostById(postId as string)
   })
-  const userId = useAppSelector((state) => state.auth.id)
+  // const userId = useAppSelector((state) => state.auth.id)
+  const { id: userId, username } = useAppSelector((state) => state.auth)
   const post = data?.data.data
 
   const [content, setContent] = useState<string>()
 
   const commentsQuery = useInfiniteQuery({
     queryKey: ['comments', postId],
-    //pageParam mac dinh ban dau initialPagaParam
     queryFn: ({ pageParam }) => CommentAPI.getComments(postId as string, 0, pageParam, 2),
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
-      // if (lastPage?.data?.data?.last) return undefined
-      return lastPage.data.data.pageable.pageNumber + 1
-    }
+    getNextPageParam: (lastPage) => lastPage.data.data.pageable.pageNumber + 1
   })
 
   //chuan bi data
@@ -58,18 +56,19 @@ export default function PostDetail() {
   useEffect(() => {
     if (content) {
       commentMutation.mutate(content as string)
-      console.log(commentsQuery.data)
-      const cmt = {
-        id: new Date().toISOString(),
+      const cmt: CommentContent = {
+        id: Date.now(),
         parentId: 0,
         userId,
         content,
         createdAt: new Date().toISOString(),
-        username: 'You'
+        username,
+        voteDown: 0,
+        voteUp: 0
       }
       //cache lai querydata
       queryClient.setQueryData(['comments', postId], (oldData: any) => {
-        if (!oldData) return
+        if (!oldData) return oldData
         /**
          * update(obj:doi tuong can update,co the la obj nen dung {},
          * Đây là oldData (dữ liệu hiện tại từ cache) đã được clone nhẹ bằng { ...oldData }
@@ -84,6 +83,8 @@ export default function PostDetail() {
       })
     }
 
+    // queryClient.removeQueries({ queryKey: ['comments', postId] }) // Xóa cache
+    // queryClient.invalidateQueries({ queryKey: ['comments', postId] }) // Buộc fetch lại
   }, [content])
 
   return (
