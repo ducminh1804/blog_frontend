@@ -9,6 +9,7 @@ import CommentList from '../CommentList'
 import classNames from 'classnames'
 import InputComment from '../../InputComment'
 import _ from 'lodash'
+import { initComment } from '../../../constants/initComment'
 
 interface Props {
   comment: CommentContent
@@ -92,9 +93,18 @@ export default function Comment({ comment, postId }: Props) {
       }
       queryClient.setQueryData(['comments', postId, id], (oldData: any) => {
         console.log(oldData)
-        if (!oldData) return _.update(oldData, 'pages[0].data.data.content', (comments) => [newCmt])
+        if (!oldData) {
+          oldData = initComment(newCmt, id, postId)
+          return _.update(oldData, 'pages[0].data.data.content', (comments) => {
+            console.log("'📌 comments trước khi cập nhật:', comments)", oldData)
+            return [newCmt]
+          })
+        }
 
-        return _.update({ ...oldData }, 'pages[0].data.data.content', (comments) => [newCmt, ...comments])
+        return _.update({ ...oldData }, 'pages[0].data.data.content', (comments = []) => {
+          console.log('📌 comments trước khi cập nhật:', comments)
+          return [newCmt, ...comments]
+        })
       })
     }
     console.log('end')

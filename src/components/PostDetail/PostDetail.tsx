@@ -26,7 +26,7 @@ export default function PostDetail() {
 
   const commentsQuery = useInfiniteQuery({
     queryKey: ['comments', postId],
-    queryFn: ({ pageParam }) => CommentAPI.getComments(postId as string, 0, pageParam, 2),
+    queryFn: ({ pageParam }) => CommentAPI.getComments(postId as string, 0, pageParam, 6),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.data.data.pageable.pageNumber + 1
   })
