@@ -53,10 +53,10 @@ export default function Post(props: Props) {
       <div className='flex gap-2 '>
         <Vote voteVal={upVoted - downVoted} />
         <div onClick={handleClick}>
-          <NavItem icon={<MessageCircle />} color='bg-slate-400' text='93' />{' '}
+          <NavItem icon={<MessageCircle />} color='bg-slate-400' lng='Comment' trans='Bình Luận' />{' '}
         </div>
         <div>
-          <NavItem icon={<BookMarked />} color='bg-slate-400' />
+          <NavItem icon={<BookMarked />} color='bg-slate-400' lng='Bookmark' trans='Đánh Dấu' />
         </div>
       </div>
     </div>

@@ -4,8 +4,10 @@ import Comment from './Comment/Comment'
 interface Props {
   comments?: CommentContent[]
   postId: string
+  isFetching?: boolean
+  hasNextPage?:boolean
 }
-export default function CommentList({ comments, postId }: Props) {
+export default function CommentList({ comments, postId, isFetching, hasNextPage }: Props) {
   return (
     <div>
       {comments?.map((comment) => (

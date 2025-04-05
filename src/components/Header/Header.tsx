@@ -1,17 +1,50 @@
-import React from 'react'
-import { CirclePlus, Globe, BookOpen, Search, Bot, Laugh } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { CirclePlus, Globe, BookOpen, Search, Bot, Laugh, Languages } from 'lucide-react'
 import NavItem from '../NavItem'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { useNavigate } from 'react-router-dom'
 import { onChat } from '../../redux/slices/chat.slice'
+import type { Lng } from '../../types/lng.type'
+import { Trans, useTranslation } from 'react-i18next'
+import { clearLS } from '../../services/localstore.service'
+import { removeFromSs } from '../../utils/saveToSs'
+import useLng from '../../hooks/useLng'
 
 export default function Header() {
   const isAuth = useAppSelector((state) => state.auth.isAuth)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const { i18n } = useTranslation()
   const handleChat = () => {
-    dispatch(onChat())
+    !isAuth ? navigate('/login') : dispatch(onChat())
   }
+  const handleCreatePost = () => {
+    !isAuth ? navigate('/login') : navigate('/create-post/text')
+  }
+
+  const [lng, setLng] = useState(localStorage.getItem('i18nextLng') || 'en')
+  const [toLng, setToLng] = useState('vi')
+
+  const handleLanguage = () => {
+    const lngLs = localStorage.getItem('i18nextLng') || 'vi'
+    lngLs === 'en' ? setLng('vi') : setLng('en')
+  }
+
+  const handleLogout = () => {
+    clearLS()
+    window.location.reload()
+    removeFromSs('posts')
+    // navigate('/login')
+  }
+
+  const handleLogin = () => {
+    navigate('/login')
+  }
+  useEffect(() => {
+    i18n.changeLanguage(lng)
+    lng === 'vi' ? setToLng('en') : setToLng('vi')
+  }, [lng])
+
   return (
     <div className='sticky top-0 z-50'>
       <nav className='flex items-center justify-between px-28 py-5 bg-white shadow-md'>
@@ -29,32 +62,57 @@ export default function Header() {
           {/* Navigation */}
           <div className='flex items-center gap-3'>
             <div onClick={handleChat}>
-              <NavItem icon={<Bot size={20} className='text-blue-600' />} text='Chat' color='bg-blue-100' />
+              <NavItem
+                icon={<Bot size={20} className='text-blue-600' />}
+                color='bg-blue-100'
+                lng='Chat'
+                trans='Tro Chuyen'
+              />
             </div>
-            <div onClick={() => navigate('/create-post/text')}>
+            <div onClick={handleCreatePost}>
               <NavItem
                 icon={<CirclePlus size={20} className='text-green-600' />}
-                text='Create Post'
                 color='bg-green-100'
+                lng='Create Post'
+                trans='Tao Bai Viet'
               />
             </div>
           </div>
         </div>
-        <input placeholder='Search' className=' mx-2 flex-1 border rounded-3xl border-black p-2 rounded-md' />
+
+        <input
+          placeholder={useLng({ lng: 'Search', toLng: 'Tìm Kiếm' })}
+          className=' mx-2 flex-1 border rounded-3xl border-black p-2 rounded-md'
+        />
 
         {/* Search & Auth */}
         {!isAuth ? (
           <div className='flex items-center gap-4'>
-            <span className='text-gray-700 cursor-pointer'>Register</span>
-            <button className='px-4 py-2 bg-blue-600 text-white rounded-lg active:scale-95 transition-all'>
-              Login
+            <button
+              onClick={handleLogin}
+              className='px-4 py-2 bg-blue-600 text-white rounded-lg active:scale-95 transition-all'
+            >
+              {useLng({ lng: 'Login', toLng: 'Đăng Nhập' })}
             </button>
           </div>
         ) : (
-          <div>
-            <NavItem color='bg-red-100' icon={<Laugh size={20} className='text-red-600' />} text='' />
-          </div>
+          <button
+            onClick={handleLogout}
+            className='px-4 py-2 bg-blue-600 text-white rounded-lg active:scale-95 transition-all'
+          >
+            {useLng({ lng: 'Logout', toLng: 'Đăng Xuất' })}
+          </button>
         )}
+
+        <div className='ml-2' onClick={handleLanguage}>
+          {/* <NavItem color='bg-blue-100' icon={<Languages size={20} className='text-blue-600' />} text={toLng} lng='' trans=''/> */}
+          <NavItem
+            color='bg-blue-100'
+            icon={<Languages size={20} className='text-blue-600' />}
+            lng='vi'
+            trans='en'
+          />
+        </div>
       </nav>
     </div>
   )

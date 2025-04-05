@@ -11,6 +11,8 @@ import classNames from 'classnames'
 import { useAppSelector } from '../../redux/hooks'
 import _ from 'lodash'
 import type { CommentContent } from '../../types/comment.type'
+import { saveToSs } from '../../utils/saveToSs'
+import type { PostReponse } from '../../types/post.type'
 export default function PostDetail() {
   const queryClient = useQueryClient()
   const { postId } = useParams()
@@ -26,7 +28,7 @@ export default function PostDetail() {
 
   const commentsQuery = useInfiniteQuery({
     queryKey: ['comments', postId],
-    queryFn: ({ pageParam }) => CommentAPI.getComments(postId as string, 0, pageParam, 6),
+    queryFn: ({ pageParam }) => CommentAPI.getComments(postId as string, 0, pageParam, 2),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.data.data.pageable.pageNumber + 1
   })
@@ -52,6 +54,13 @@ export default function PostDetail() {
   const commentMutation = useMutation({
     mutationFn: (content: string) => CommentAPI.createComment(0, userId, postId as string, content)
   })
+
+  useEffect(() => {
+    if (post) {
+      saveToSs(post as PostReponse, 'posts')
+    }
+    // console.log(post?.id)
+  }, [post])
 
   useEffect(() => {
     if (content) {
@@ -111,7 +120,12 @@ export default function PostDetail() {
           <InputComment handleContent={handleContent} />
         </div>
         <div>
-          <CommentList comments={comments} postId={postId as string} />
+          <CommentList
+            isFetching={commentsQuery.isFetching}
+            hasNextPage={commentsQuery.hasNextPage}
+            comments={comments}
+            postId={postId as string}
+          />
           <button
             onClick={handleLoad}
             className={classNames('btn text-xs pl-5 text-orange font-bold active:scale-95 transition-all', {

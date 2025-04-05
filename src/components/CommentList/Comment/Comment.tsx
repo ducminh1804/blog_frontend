@@ -10,6 +10,8 @@ import classNames from 'classnames'
 import InputComment from '../../InputComment'
 import _ from 'lodash'
 import { initComment } from '../../../constants/initComment'
+import Skeleton from '../../Skeleton'
+import Spinner from '../../Spinner'
 
 interface Props {
   comment: CommentContent
@@ -159,16 +161,22 @@ export default function Comment({ comment, postId }: Props) {
               hidden: !expand.ex
             })}
           >
-            <CommentList comments={subComments} postId={postId} />
-            <button
-              onClick={handleLoadParent}
-              className={classNames('btn text-xs pl-5 text-orange font-bold active:scale-95 transition-all', {
-                block: !last,
-                hidden: last
-              })}
-            >
-              More replies
-            </button>
+            {commentsQuery.isFetching ? (
+              <Spinner />
+            ) : (
+              <>
+                <CommentList comments={subComments} postId={postId} />
+                <button
+                  onClick={handleLoadParent}
+                  className={classNames('btn text-xs pl-5 text-orange font-bold active:scale-95 transition-all', {
+                    block: !last,
+                    hidden: last
+                  })}
+                >
+                  More replies
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

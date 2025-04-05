@@ -1,9 +1,12 @@
 import { max } from 'lodash'
 import { useState } from 'react'
+import { useOutletContext } from 'react-router-dom'
 
 export default function CreatePostText() {
   const maxSize = 300
   const [size, setSize] = useState(maxSize)
+  const tag = useOutletContext()
+  console.log(tag)
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     let size = e.target.value.length
@@ -27,6 +30,11 @@ export default function CreatePostText() {
       <span className='ml-10'>
         {Math.max(0, maxSize - size)}/{maxSize}
       </span>
+      <div>
+        <button className='bg-orange rounded-sm p-2 text-white font-bold mt-5 active:scale-95 transition-all'>
+          Post
+        </button>
+      </div>
     </div>
   )
 }

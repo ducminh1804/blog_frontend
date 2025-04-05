@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Provider } from 'react-redux'
 import { StrictMode } from 'react'
 import { store } from './redux/store.ts'
+import './i18n/i18n.ts'
 const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')!).render(

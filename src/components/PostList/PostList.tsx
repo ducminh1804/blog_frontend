@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Post from './Post/Post'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { PostAPI } from '../../api/post.api'
+import Skeleton from '../Skeleton'
 
 interface Props {
   postRef?: React.RefObject<HTMLDivElement>
@@ -11,7 +12,7 @@ export default function PostList({ postRef }: Props) {
   // console.log("kiem tra co bi re render khi newFeed no render k?")
 
   const getPosts = PostAPI.getPosts
-  const { data, isFetching, error, fetchNextPage } = useInfiniteQuery({
+  const { data, isFetching, error, fetchNextPage, hasNextPage } = useInfiniteQuery({
     queryKey: ['posts'],
     // truyen cai dieu kien vao,//pageParam mac dinh ban dau initialPagaParam
     queryFn: ({ pageParam }) => getPosts(pageParam),
@@ -54,22 +55,27 @@ export default function PostList({ postRef }: Props) {
         const isLastPost = index === posts.length - 1
         return (
           <div key={post.id} ref={isLastPost ? lastPostRef : null}>
-            <Post
-              postRef={postRef}
-              id={post.id}
-              username={post.username}
-              crtAt={post.createdAt}
-              tagName={post.tags[0]?.name}
-              tagId={post.tags[0].id}
-              title={post.title}
-              kind={post.kind}
-              body={post.body}
-              upVoted={post.upVoted}
-              downVoted={post.downVoted}
-            />
+            {isFetching && hasNextPage ? (
+              <Skeleton />
+            ) : (
+              <Post
+                postRef={postRef}
+                id={post.id}
+                username={post.username}
+                crtAt={post.createdAt}
+                tagName={post.tags[0]?.name}
+                tagId={post.tags[0].id}
+                title={post.title}
+                kind={post.kind}
+                body={post.body}
+                upVoted={post.upVoted}
+                downVoted={post.downVoted}
+              />
+            )}
           </div>
         )
       })}
+     
     </div>
   )
 }

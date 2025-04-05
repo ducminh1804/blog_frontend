@@ -1,10 +1,16 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ImageUp, Trash2 } from 'lucide-react'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { PostAPI, type MediaType } from '../../../api/post.api'
+import { useOutletContext } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import Spinner from '../../Spinner'
 
 export default function CreatePostMedia() {
   const maxSize = 300
   const [size, setSize] = useState(maxSize)
-
+  const tag = useOutletContext()
+  const queryClient = useQueryClient()
   const [type, setType] = useState<any>()
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -13,31 +19,57 @@ export default function CreatePostMedia() {
   }
 
   const [media, setMedia] = useState<any>(null)
-
+  const [file, setFile] = useState<any>(null)
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files !== null) {
       setMedia(URL.createObjectURL(e.target.files[0]) as any)
       const type = e.target.files[0].type.startsWith('image') ? 'image' : 'video'
       setType(type)
+      setFile(e.target.files[0])
     }
   }
 
   const refInput = useRef<any>(null)
-    const handleClick = () => {
-      refInput.current?.click()
+  const refTitle = useRef<any>(null)
+  const handleClick = () => {
+    refInput.current?.click()
+  }
+
+  const postMutation = useMutation({
+    mutationFn: PostAPI.createPostMedia
+  })
+
+  const handlePost = async () => {
+    if (!file || !refTitle || !tag) return
+
+    const data: MediaType = {
+      title: refTitle.current.value,
+      kind: type,
+      tags: tag as string,
+      file: file
     }
+
+    try {
+      await postMutation.mutateAsync(data)
+      toast.success('Post Success')
+      // queryClient.invalidateQueries({queryKey:['posts']}) // Buộc fetch lại dữ liệu mới nhất
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div>
       <div>
         <textarea
+          ref={refTitle}
           required
           placeholder='Title*'
           className='border border-black rounded-2xl p-2 mt-5 w-80 min-h-12 resize-none overflow-hidden'
-          rows={1} // Ban đầu 1 dòng
+          rows={1}
           onInput={(e) => {
-            e.currentTarget.style.height = 'auto' // Reset chiều cao
-            e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px' // Set chiều cao theo nội dung
+            e.currentTarget.style.height = 'auto'
+            e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px'
           }}
           maxLength={maxSize}
           onChange={(e) => handleChange(e)}
@@ -70,6 +102,19 @@ export default function CreatePostMedia() {
           >
             <ImageUp color='gray' />
           </div>
+        )}
+      </div>
+
+      <div>
+        {postMutation.isPending ? (
+          <Spinner />
+        ) : (
+          <button
+            onClick={handlePost}
+            className='bg-orange rounded-sm p-2 text-white font-bold mt-5 active:scale-95 transition-all'
+          >
+            Post
+          </button>
         )}
       </div>
     </div>
