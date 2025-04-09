@@ -45,3 +45,4 @@ Frontend cho hệ thống Blog cá nhân, được xây dựng bằng React, Typ
 ```bash
 git clone https://github.com/ducminh1804/blog_frontend.git
 cd blog_frontend
+npm run dev
