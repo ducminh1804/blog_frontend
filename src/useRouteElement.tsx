@@ -13,6 +13,7 @@ import PostDetail from './components/PostDetail'
 import PostList from './components/PostList'
 import HistoryList from './components/HistoryList'
 import InfoGroup from './components/InfoGroup'
+import Search from './pages/SimilarList'
 
 export default function useRouterElement() {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuth)
@@ -40,6 +41,10 @@ export default function useRouterElement() {
         {
           path: '/post/:postId',
           element: <NewFeedLayout leftChild={<PostDetail />} rightChild={<InfoGroup />} />
+        },
+        {
+          path: '/post/search',
+          element: <Search />
         }
       ]
     },

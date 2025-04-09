@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { CirclePlus, Globe, BookOpen, Search, Bot, Laugh, Languages } from 'lucide-react'
 import NavItem from '../NavItem'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
@@ -9,6 +9,8 @@ import { Trans, useTranslation } from 'react-i18next'
 import { clearLS } from '../../services/localstore.service'
 import { removeFromSs } from '../../utils/saveToSs'
 import useLng from '../../hooks/useLng'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { PostAPI } from '../../api/post.api'
 
 export default function Header() {
   const isAuth = useAppSelector((state) => state.auth.isAuth)
@@ -45,6 +47,15 @@ export default function Header() {
     lng === 'vi' ? setToLng('en') : setToLng('vi')
   }, [lng])
 
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleSearch = async () => {
+    if (inputRef.current) {
+      console.log(inputRef.current.value)
+      navigate('/post/search', { state: { title: inputRef.current.value } })
+    }
+  }
+
   return (
     <div className='sticky top-0 z-50'>
       <nav className='flex items-center justify-between px-28 py-5 bg-white shadow-md'>
@@ -80,11 +91,18 @@ export default function Header() {
           </div>
         </div>
 
-        <input
-          placeholder={useLng({ lng: 'Search', toLng: 'Tìm Kiếm' })}
-          className=' mx-2 flex-1 border rounded-3xl border-black p-2 rounded-md'
-        />
-
+        {/* Search */}
+        <div className='flex flex-1 mx-1 justify-center items-center border rounded-md border-black p-2'>
+          <input
+            ref={inputRef}
+            placeholder={useLng({ lng: 'Search', toLng: 'Tìm Kiếm' })}
+            // className=' mx-2 flex-1 border rounded-3xl border-black p-2 rounded-md'
+            className='focus:outline-none focus:ring-0 focus:border-none flex-1'
+          />
+          <div onClick={handleSearch} className='active:scale-95 transition-all cursor-pointer'>
+            <Search />
+          </div>
+        </div>
         {/* Search & Auth */}
         {!isAuth ? (
           <div className='flex items-center gap-4'>
@@ -106,12 +124,7 @@ export default function Header() {
 
         <div className='ml-2' onClick={handleLanguage}>
           {/* <NavItem color='bg-blue-100' icon={<Languages size={20} className='text-blue-600' />} text={toLng} lng='' trans=''/> */}
-          <NavItem
-            color='bg-blue-100'
-            icon={<Languages size={20} className='text-blue-600' />}
-            lng='vi'
-            trans='en'
-          />
+          <NavItem color='bg-blue-100' icon={<Languages size={20} className='text-blue-600' />} lng='vi' trans='en' />
         </div>
       </nav>
     </div>

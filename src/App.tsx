@@ -4,7 +4,7 @@ import ChatController from './pages/ChatController'
 import { connectStomp } from './services/stompClient'
 import { Suspense } from 'react'
 
-function App() {
+export default function App() {
   const route = useRouteElement()
 
   return (
@@ -15,10 +15,10 @@ function App() {
   )
 }
 
-export default function WrappedApp() {
-  return (
-    <Suspense fallback='...is loading'>
-      <App />
-    </Suspense>
-  )
-}
+// export default function WrappedApp() {
+//   return (
+//     <Suspense fallback='...is loading'>
+//       <App />
+//     </Suspense>
+//   )
+// }

@@ -32,5 +32,12 @@ export const PostAPI = {
         'Content-Type': 'multipart/form-data'
       }
     })
+  },
+
+  getSimilarPosts: (title: string) => {
+    return http.get<ApiResponse<PostReponse[]>>('/post/similar', {
+      params: { title }
+    })
   }
+
 }
