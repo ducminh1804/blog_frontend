@@ -92,6 +92,15 @@ npm run dev
     <br></br>
 </p>
 
+
+<p align="center">
+    <img src="./src/assets/image12.png" alt="Trang chủ" width="800"/>
+    <img src="./src/assets/image13.png" alt="Trang chủ" width="800"/>
+  <br>
+  <em>Chuyển đổi ngôn ngữ</em>
+    <br></br>
+</p>
+
 <p align="center">
     <img src="./src/assets/i19.png" alt="Trang chủ" width="800"/>
   <br>
