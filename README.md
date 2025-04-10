@@ -9,6 +9,7 @@ Frontend cho hệ thống Blog cá nhân, được xây dựng bằng React, Typ
 ## 📌 Các tính năng chính
 - Chat real-time qua WebSocket + STOMP (publish/subscribe)
 - Infinity scroll bài viết (load dần khi cuộn)
+- Image lazy loading
 - Upload ảnh & video trong bài viết
 - Comment lồng nhau, hỗ trợ mở rộng vô hạn (infinity expand)
 - Đa ngôn ngữ (i18n) – chuyển đổi ngôn ngữ giao diện linh hoạt
