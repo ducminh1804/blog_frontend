@@ -1,6 +1,8 @@
 # 📘 Blog Frontend
 
-A modern blog frontend built with **React**, **TypeScript**, and **Vite**. This project provides a user interface to interact with the backend, allowing users to browse, create, and manage blog posts, with real-time chat and dynamic features.
+A modern, responsive blog frontend application built with React, TypeScript, and Vite, designed to deliver a smooth and interactive user experience. This project acts as the client-side interface for a full-stack blog platform, allowing users to explore a wide range of blog posts, engage in meaningful discussions through nested comments, and connect with others via real-time chat powered by WebSocket and STOMP.
+
+With an intuitive layout, infinite scrolling, media uploads, and multi-language support, this frontend ensures both usability and performance across devices. Users can register, log in, and manage their own posts with proper permission control. Integrated with a RESTful API backend, the app supports dynamic features such as fuzzy search, recently viewed post history, and live content updates. Whether you're a reader, contributor, or admin, this frontend is crafted to provide a seamless blogging experience with modern web technologies, scalable architecture, and maintainable codebase.
 
 ---
 
