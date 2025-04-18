@@ -20,7 +20,8 @@ With an intuitive layout, infinite scrolling, media uploads, and multi-language 
 ## 📌 Features
 
 - ✅ Real-time chat using WebSocket + STOMP (publish/subscribe)
-- ✅ Infinite scroll for blog posts (using Intersection Observer for smooth and efficient loading without scroll event listeners)- ✅ Image lazy loading
+- ✅ Infinite scroll for blog posts and nested comments (using Intersection Observer for smooth and efficient loading without scroll event listeners)
+- ✅ Image lazy loading
 - ✅ Image & video upload in posts
 - ✅ Nested comments (infinite expandable)
 - ✅ Multi-language support (i18n)
