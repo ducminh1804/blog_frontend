@@ -1,3 +1,5 @@
+# Link Backend: https://github.com/ducminh1804/blog_api
+
 # 📘 Blog Frontend
 
 A modern, responsive blog frontend application built with React, TypeScript, and Vite, designed to deliver a smooth and interactive user experience. This project acts as the client-side interface for a full-stack blog platform, allowing users to explore a wide range of blog posts, engage in meaningful discussions through nested comments, and connect with others via real-time chat powered by WebSocket and STOMP.
